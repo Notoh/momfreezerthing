@@ -10,6 +10,9 @@ public class MomGui {
     private JButton addItemButton;
     private JTextField expiryDate;
     private JPanel LabelText;
+    private JButton removeItemButton;
+    private JTextField itemToRemoveTextField;
+    private JButton listInventoryButton;
     private static JFrame frame;
     
     static JFrame getFrame() {
@@ -19,6 +22,8 @@ public class MomGui {
     private MomGui() throws IOException {
         checkExpiry.addActionListener(e -> Backend.getInstance().checkExpiry());
         addItemButton.addActionListener(e -> Backend.getInstance().addExpiry(insertItem.getText(), expiryDate.getText()));
+        removeItemButton.addActionListener(e -> Backend.getInstance().remove(itemToRemoveTextField.getText()));
+        listInventoryButton.addActionListener(e -> Backend.getInstance().list());
     }
     
     public static void main(String[] args) throws IOException {

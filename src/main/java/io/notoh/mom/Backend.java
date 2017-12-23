@@ -142,4 +142,77 @@ public final class Backend {
         }
     }
     
+    void remove(String name) {
+        try {
+            StringBuilder toReAdd = new StringBuilder();
+            reader = new BufferedReader(new FileReader("./exp.txt"));
+            System.gc();
+            String lineRead = reader.readLine();
+            boolean found = false;
+            while(lineRead != null) {
+                if(!lineRead.contains("-")) {
+                    lineRead = reader.readLine();
+                    continue;
+                }
+                if(lineRead.substring(0,lineRead.indexOf("-")).equalsIgnoreCase(name) && !found) {
+                    found = true;
+                    lineRead = reader.readLine();
+                    continue;
+                }
+                toReAdd.append(lineRead).append("\n");
+                lineRead = reader.readLine();
+            }
+            writer = new BufferedWriter(new FileWriter("./exp.txt"));
+            writer.write(toReAdd.append("\n").toString());
+            writer.flush();
+            writer.close();
+            reader.close();
+            if(found) {
+                JOptionPane.showMessageDialog(MomGui.getFrame(), "Successful removal of " + name + ".", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(MomGui.getFrame(), "That item could not be found!", "Not found", JOptionPane.INFORMATION_MESSAGE);
+            }
+            System.gc();
+        } catch(IOException e) {
+            File file = new File("error_" + LocalDateTime.now());
+            try {
+                file.createNewFile();
+                FileWriter writer = new FileWriter(file);
+                writer.append(e.getMessage());
+                writer.flush();
+                writer.close();
+            } catch(IOException ignored) {}
+            JOptionPane.showMessageDialog(MomGui.getFrame(), "An unexpected error occurred, stacktrace written to "
+                    + file + ".", "Error!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    void list() {
+        try {
+            StringBuilder items = new StringBuilder();
+            reader = new BufferedReader(new FileReader("./exp.txt"));
+            System.gc();
+            String lineRead = reader.readLine();
+            while(lineRead != null) {
+                if(!lineRead.contains("-")) {
+                    lineRead = reader.readLine();
+                    continue;
+                }
+                items.append(lineRead.substring(0, lineRead.indexOf("-"))).append(", ").append(lineRead.substring(lineRead.indexOf("$") + 1)).append("\n");
+                lineRead = reader.readLine();
+            }
+            JOptionPane.showMessageDialog(MomGui.getFrame(), "ITEMS: " + items.toString(), "Inventory", JOptionPane.INFORMATION_MESSAGE);
+        } catch(IOException e) {
+            File file = new File("error_" + LocalDateTime.now());
+            try {
+                file.createNewFile();
+                FileWriter writer = new FileWriter(file);
+                writer.append(e.getMessage());
+                writer.flush();
+                writer.close();
+            } catch(IOException ignored) {}
+            JOptionPane.showMessageDialog(MomGui.getFrame(), "An unexpected error occurred, stacktrace written to "
+                    + file + ".", "Error!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }
