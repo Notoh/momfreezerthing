@@ -46,6 +46,10 @@ public final class Backend {
     }
     
     public void addExpiry(String name, String datetxt) {
+        if(name.contains("-") || datetxt.contains("-")) {
+            JOptionPane.showMessageDialog(MomGui.getFrame(), "Error! - and : are illegal characters!", "Error!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         boolean isValidDate = (datetxt.chars().reduce(0,(a, c) -> a + (c=='/'?1:0)) == 2) && (datetxt.chars()
                 .reduce(0, (a,c) -> a + (c==':'?1:0)) == 0);
         if(!isValidDate) {
@@ -60,12 +64,12 @@ public final class Backend {
             reader = new BufferedReader(new FileReader("./exp.txt"));
             String ln = reader.readLine();
             while(ln != null) {
-                builder.append(ln);
+                builder.append(ln).append("\n");
                 ln = reader.readLine();
             }
             writer = new BufferedWriter(new FileWriter("./exp.txt"));
             System.gc();
-            writer.write(builder.append("\n").toString());
+            writer.write(builder.toString());
             writer.write(name + "-" + randomUUID.toString() + "$" + date.toString() + "\n");
             writer.flush();
             JOptionPane.showMessageDialog(MomGui.getFrame(), "Success adding item " + name + " with UUID " + randomUUID.toString() + "!", "Success",
@@ -91,33 +95,35 @@ public final class Backend {
         }
         try {
             StringBuilder toReAdd = new StringBuilder();
-            StringBuilder expired = new StringBuilder("The following items are expired: ");
             LocalDate now = LocalDate.now();
             reader = new BufferedReader(new FileReader("./exp.txt"));
             System.gc();
             DateTimeFormatter parser = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String lineRead = reader.readLine();
+            boolean nonExp = true;
             while(lineRead != null) {
+                if(lineRead.length() < 32) {
+                    lineRead = reader.readLine();
+                    if(lineRead == null) break;
+                    continue;
+                }
                 String name = lineRead.substring(0,lineRead.indexOf("-"));
                 String uuid = lineRead.substring(lineRead.indexOf("-")+1,lineRead.indexOf("$"));
-                String expiry = lineRead.substring(lineRead.indexOf("$")+1);
+                String expiry = lineRead.substring(lineRead.indexOf("$")+1,lineRead.indexOf("$")+11);
                 LocalDate parsed = LocalDate.from(parser.parse(expiry));
-                JOptionPane.showMessageDialog(MomGui.getFrame(), parsed.isBefore(now), "Expired Items", JOptionPane
-                        .INFORMATION_MESSAGE);
                 if(parsed.isBefore(now)) {
-                    expired.append(name).append(" (").append(uuid).append(") - Expired ").append(parsed.toString()).append("\n");
+                    JOptionPane.showMessageDialog(MomGui.getFrame(), name+"("+uuid+") is expired as of "+parsed.toString(), "Expiry",JOptionPane.INFORMATION_MESSAGE);
+                    nonExp = false;
                 } else {
                     toReAdd.append(name).append("-").append(uuid).append("$").append(expiry).append("\n");
                 }
                 lineRead = reader.readLine();
             }
-            if(expired.length() > 33) {
-                JOptionPane.showMessageDialog(MomGui.getFrame(), expired.toString(), "Expired Items", JOptionPane.INFORMATION_MESSAGE);
-            } else {
+            if(nonExp) {
                 JOptionPane.showMessageDialog(MomGui.getFrame(), "No expired items!", "No expiry", JOptionPane.INFORMATION_MESSAGE);
             }
             writer = new BufferedWriter(new FileWriter("./exp.txt"));
-            writer.write(toReAdd.toString());
+            writer.write(toReAdd.append("\n").toString());
             writer.flush();
             writer.close();
             reader.close();
