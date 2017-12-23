@@ -18,7 +18,7 @@ public class MomGui {
     
     private MomGui() throws IOException {
         checkExpiry.addActionListener(e -> Backend.getInstance().checkExpiry());
-        expiryDate.addActionListener(e -> Backend.getInstance().setTempBuffer(expiryDate.getText()));
+        addItemButton.addActionListener(e -> Backend.getInstance().addExpiry(insertItem.getText(), expiryDate.getText()));
     }
     
     public static void main(String[] args) throws IOException {
@@ -29,7 +29,6 @@ public class MomGui {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-        
     }
     
     

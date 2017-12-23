@@ -40,7 +40,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value="Insert item to add here..."/>
+          <text value="Name item to add here..."/>
         </properties>
       </component>
       <component id="5deae" class="javax.swing.JButton" binding="addItemButton" default-binding="true">
