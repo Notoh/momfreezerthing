@@ -5,17 +5,14 @@ import java.io.IOException;
 
 public class MomGui {
     private JButton checkExpiry;
-    @SuppressWarnings("unused")
     private JLabel selectOption;
     private JTextField insertItem;
     private JButton addItemButton;
     private JTextField expiryDate;
     private JPanel LabelText;
     private JButton removeItemButton;
+    private JTextField itemToRemoveTextField;
     private JButton listInventoryButton;
-    private JButton searchButton;
-    private JTextField categoryField;
-    private JButton aboutHelpButton;
     private static JFrame frame;
     
     static JFrame getFrame() {
@@ -23,20 +20,10 @@ public class MomGui {
     }
     
     private MomGui() throws IOException {
-        Backend instance = Backend.getInstance();
-        checkExpiry.addActionListener(e -> instance.checkExpiry(categoryField.getText()));
-        addItemButton.addActionListener(e -> instance.addExpiry(insertItem.getText(), expiryDate.getText(), categoryField.getText()));
-        removeItemButton.addActionListener(e -> instance.remove(insertItem.getText(), categoryField.getText()));
-        listInventoryButton.addActionListener(e -> instance.list(categoryField.getText())); //TODO fix this
-        searchButton.addActionListener(e -> instance.search(insertItem.getText(), categoryField.getText())); //TODO
-        aboutHelpButton.addActionListener(e -> {
-            JEditorPane editorPane = new JEditorPane("text/html", "<html><body>This software was made by Alex " +
-                    "Pawelko for the best mom ever, source code is viewable <a href=\"https://github" +
-                    ".com/notoh/momfreezerthing/\">here</a> </body></html>");
-            editorPane.setEditable(false);
-            JOptionPane.showMessageDialog(null, editorPane);
-        });
-        Runtime.getRuntime().addShutdownHook(new Thread(instance::writeAll));
+        checkExpiry.addActionListener(e -> Backend.getInstance().checkExpiry());
+        addItemButton.addActionListener(e -> Backend.getInstance().addExpiry(insertItem.getText(), expiryDate.getText()));
+        removeItemButton.addActionListener(e -> Backend.getInstance().remove(itemToRemoveTextField.getText()));
+        listInventoryButton.addActionListener(e -> Backend.getInstance().list());
     }
     
     public static void main(String[] args) throws IOException {
