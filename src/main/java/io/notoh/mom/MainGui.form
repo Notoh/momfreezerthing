@@ -30,7 +30,8 @@
           </grid>
         </constraints>
         <properties>
-          <text value="Name item to add/remove/search here..."/>
+          <text value=""/>
+          <toolTipText value="Name item to add/remove/search here..."/>
         </properties>
       </component>
       <component id="92fb9" class="javax.swing.JTextField" binding="expiryDate" default-binding="true">
@@ -40,7 +41,8 @@
           </grid>
         </constraints>
         <properties>
-          <text value="Expiry date for added item... (yyyy/MM/dd)"/>
+          <text value=""/>
+          <toolTipText value="Expiry date for added item... (yyyy-MM-dd)"/>
         </properties>
       </component>
       <component id="c3a6b" class="javax.swing.JButton" binding="listInventoryButton" default-binding="true">
@@ -92,7 +94,8 @@
           </grid>
         </constraints>
         <properties>
-          <text value="Tags..."/>
+          <text value=""/>
+          <toolTipText value="Tags..."/>
         </properties>
       </component>
       <component id="3730a" class="javax.swing.JButton" binding="aboutHelpButton" default-binding="true">

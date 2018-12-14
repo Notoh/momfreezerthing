@@ -30,7 +30,9 @@ public final class Backend {
             try {
                 file.createNewFile();
                 FileWriter writer = new FileWriter(file);
+                writer.append(Arrays.toString(e.getStackTrace()));
                 writer.append(e.getMessage());
+                writer.append(e.getClass().getCanonicalName());
                 writer.flush();
                 writer.close();
             } catch(IOException ignored) {}
@@ -77,7 +79,7 @@ public final class Backend {
             ArrayList<String> itemTags = new ArrayList<>();
             int[] indexes = new int[line.length() - item.length()];
             int j = 0;
-            for(int i = -1; (i = line.indexOf(match, i + 1)) != -1; i++) {
+            for(int i = -1; (i = line.indexOf(match, i + 1)) > 0; i++) {
                 indexes[j] = i;
                 j++;
             }
@@ -86,6 +88,9 @@ public final class Backend {
                     itemTags.add(line.substring(indexes[i]+2, line.indexOf(":")).toUpperCase());
                     continue;
                 }
+                if(indexes[i+1]==0 && i != 0)
+                    continue;
+
                 itemTags.add(line.substring(indexes[i]+2, indexes[i+1]).toUpperCase());
             }
             items.add(new Item(itemName, uuid, date, itemTags));
@@ -109,7 +114,7 @@ public final class Backend {
         tags = tags.toUpperCase();
         LocalDate date = LocalDate.parse(datetxt, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         items.add(new Item(name.toUpperCase(), UUID.randomUUID(), date, Arrays.asList(tags.split(", "))));
-        JOptionPane.showMessageDialog(null, "Added item " + name + " expiring" + datetxt + ".", "Success!", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Added item " + name + " expiring " + datetxt + ".", "Success!", JOptionPane.INFORMATION_MESSAGE);
     }
     
     void checkExpiry(String tags) {
@@ -120,14 +125,18 @@ public final class Backend {
             if(item.hasTags(arrTags) && item.isExpired())
                 expired.add(item);
         }
-        JOptionPane panel = new JOptionPane();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         StringBuilder builder = new StringBuilder();
         for(Item item : expired) {
             builder.append(item.getName()).append("expires ").append(item.getExpirationDate()).append("\n");
         }
-        panel.setMessage(builder);
-        panel.setVisible(true);
+        if(expired.size() <= 30)
+            JOptionPane.showMessageDialog(MomGui.getFrame(), builder.toString());
+        else {
+            String[] arrText = builder.toString().split("\\n");
+            for(int i = 0; i < arrText.length; i+=30) {
+                JOptionPane.showMessageDialog(MomGui.getFrame(), Arrays.toString(Arrays.copyOfRange(arrText, i, Math.min(i+30, arrText.length))));
+            }
+        }
 
     }
     
@@ -149,14 +158,18 @@ public final class Backend {
             if(item.hasTags(arrTags))
                 validItems.add(item);
         }
-        JOptionPane panel = new JOptionPane();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         StringBuilder builder = new StringBuilder();
         for(Item item : validItems) {
             builder.append(item.getName()).append("expires ").append(item.getExpirationDate()).append("\n");
         }
-        panel.setMessage(builder);
-        panel.setVisible(true);
+        if(validItems.size() <= 30)
+            JOptionPane.showMessageDialog(MomGui.getFrame(), builder.toString());
+        else {
+            String[] arrText = builder.toString().split("\\n");
+            for(int i = 0; i < arrText.length; i+=30) {
+                JOptionPane.showMessageDialog(MomGui.getFrame(), Arrays.toString(Arrays.copyOfRange(arrText, i, Math.min(i+30, arrText.length))));
+            }
+        }
     }
     
     void search(String text, String tags) {
@@ -166,14 +179,18 @@ public final class Backend {
             if(item.hasTags(arrTags) && item.getName().contains(text.toUpperCase()))
                 validItems.add(item);
         }
-        JOptionPane panel = new JOptionPane();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         StringBuilder builder = new StringBuilder();
         for(Item item : validItems) {
             builder.append(item.getName()).append("expires ").append(item.getExpirationDate()).append("\n");
         }
-        panel.setMessage(builder);
-        panel.setVisible(true);
+        if(validItems.size() <= 30)
+            JOptionPane.showMessageDialog(MomGui.getFrame(), builder.toString());
+        else {
+            String[] arrText = builder.toString().split("\\n");
+            for(int i = 0; i < arrText.length; i+=30) {
+                JOptionPane.showMessageDialog(MomGui.getFrame(), Arrays.toString(Arrays.copyOfRange(arrText, i, Math.min(i+30, arrText.length))));
+            }
+        }
     }
     
 }

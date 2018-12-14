@@ -1,6 +1,5 @@
 package io.notoh.mom;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -20,6 +19,7 @@ public class Item implements Comparable<Item> {
     }
 
     public boolean hasTags(String... tags) {
+        if(tags[0].equals("")) return true;
         for(String tag : tags) {
             if(!this.tags.contains(tag.toUpperCase()))
                 return false;
@@ -41,7 +41,7 @@ public class Item implements Comparable<Item> {
 
     @Override
     public String toString() {
-        DateTimeFormatter parser = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        DateTimeFormatter parser = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         StringBuilder builder = new StringBuilder();
         builder.append(name).append("-").append(uuid.toString()).append("$").append(parser.format(date));
         if(tags == null || tags.size() == 0) {
