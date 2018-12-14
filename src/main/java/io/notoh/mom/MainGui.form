@@ -92,7 +92,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value="Category to add/search for..."/>
+          <text value="Tags..."/>
         </properties>
       </component>
       <component id="3730a" class="javax.swing.JButton" binding="aboutHelpButton" default-binding="true">

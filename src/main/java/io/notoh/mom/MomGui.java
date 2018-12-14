@@ -25,14 +25,15 @@ public class MomGui {
     private MomGui() throws IOException {
         Backend instance = Backend.getInstance();
         checkExpiry.addActionListener(e -> instance.checkExpiry(categoryField.getText()));
-        addItemButton.addActionListener(e -> instance.addExpiry(insertItem.getText(), expiryDate.getText(), categoryField.getText()));
-        removeItemButton.addActionListener(e -> instance.remove(insertItem.getText(), categoryField.getText()));
-        listInventoryButton.addActionListener(e -> instance.list(categoryField.getText())); //TODO fix this
-        searchButton.addActionListener(e -> instance.search(insertItem.getText(), categoryField.getText())); //TODO
+        addItemButton.addActionListener(e -> instance.addExpiry(insertItem.getText(), expiryDate.getText(), categoryField.getText() != null ? categoryField.getText() : ""));
+        removeItemButton.addActionListener(e -> instance.remove(insertItem.getText(), categoryField.getText() != null ? categoryField.getText() : ""));
+        listInventoryButton.addActionListener(e -> instance.list(categoryField.getText() != null ? categoryField.getText() : ""));
+        searchButton.addActionListener(e -> instance.search(insertItem.getText(), categoryField.getText() != null ? categoryField.getText() : ""));
         aboutHelpButton.addActionListener(e -> {
             JEditorPane editorPane = new JEditorPane("text/html", "<html><body>This software was made by Alex " +
                     "Pawelko for the best mom ever, source code is viewable <a href=\"https://github" +
-                    ".com/notoh/momfreezerthing/\">here</a> </body></html>");
+                    ".com/notoh/momfreezerthing/\">here</a>. To use, enter an item text in the item field, any possible tags in the tags field." +
+                    "The tags must be in the format TAG1, TAG2, TAGETC, with a comma and space separating them.</body></html>");
             editorPane.setEditable(false);
             JOptionPane.showMessageDialog(null, editorPane);
         });
