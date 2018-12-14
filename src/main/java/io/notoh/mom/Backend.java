@@ -76,23 +76,10 @@ public final class Backend {
             String dateText = item.substring(item.lastIndexOf("$")+1);
             LocalDate date = LocalDate.parse(dateText, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String match = ", ";
-            ArrayList<String> itemTags = new ArrayList<>();
-            int[] indexes = new int[line.length() - item.length()];
-            int j = 0;
-            for(int i = -1; (i = line.indexOf(match, i + 1)) > 0; i++) {
-                indexes[j] = i;
-                j++;
-            }
-            for(int i = 0; i < indexes.length; i++) {
-                if(i == indexes.length - 1) {
-                    itemTags.add(line.substring(indexes[i]+2, line.indexOf(":")).toUpperCase());
-                    continue;
-                }
-                if(indexes[i+1]==0 && i != 0)
-                    continue;
+            String justTags = line.substring(0, line.lastIndexOf(":"));
+            String[] realTags = justTags.split(match);
+            ArrayList<String> itemTags = new ArrayList<>(Arrays.asList(realTags));
 
-                itemTags.add(line.substring(indexes[i]+2, indexes[i+1]).toUpperCase());
-            }
             items.add(new Item(itemName, uuid, date, itemTags));
         }
     }
